@@ -5,7 +5,11 @@
   "description": "",
   "license": "UNLICENSED",
   "author": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc -p tsconfig.build.json",
@@ -19,8 +23,10 @@
     "lint-fix:package-json": "prettier-package-json --write",
     "lint-fix:prettier": "prettier --write .",
     "prepare": "husky",
+    "prepublishOnly": "npm run build",
     "test": "jest"
   },
+  "types": "dist/index.d.ts",
   "devDependencies": {
     "@ofk/eslint-config-recommend": "^6.6.2",
     "@types/jest": "^29.5.12",
