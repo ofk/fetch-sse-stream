@@ -1,10 +1,13 @@
 {
-  "private": true,
   "name": "fetch-sse-stream",
   "version": "0.0.1",
   "description": "",
-  "license": "UNLICENSED",
-  "author": "",
+  "license": "MIT",
+  "author": "ofk <ofkjpn+npm@gmail.com> (https://github.com/ofk/)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ofk/fetch-sse-stream.git"
+  },
   "type": "module",
   "main": "dist/fetch-sse-stream.cjs",
   "module": "dist/fetch-sse-stream.module.js",
