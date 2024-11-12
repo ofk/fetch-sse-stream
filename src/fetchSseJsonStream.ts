@@ -1,9 +1,11 @@
 import { fetchSseStream } from './fetchSseStream';
 
+type FetchSseStreamInit = NonNullable<Parameters<typeof fetchSseStream>[1]>;
+
 type FetchSseJsonStreamInit<T> = {
   body?: boolean | number | object | string | null;
   onData?: (data: T) => void;
-} & Omit<NonNullable<Parameters<typeof fetchSseStream>[1]>, 'body' | 'onData'>;
+} & Omit<FetchSseStreamInit, 'body' | 'onData'>;
 
 export async function fetchSseJsonStream<T = unknown>(
   input: Parameters<typeof fetchSseStream>[0],
@@ -13,10 +15,14 @@ export async function fetchSseJsonStream<T = unknown>(
   if (!req.headers.has('Content-Type')) {
     req.headers.set('Content-Type', 'application/json');
   }
-  await fetchSseStream(req, {
-    body: body ? JSON.stringify(body) : undefined,
-    onData(data) {
-      onData?.(JSON.parse(data) as T);
-    },
-  });
+  const fetchSseStreamInit: FetchSseStreamInit = {};
+  if (body !== undefined) {
+    fetchSseStreamInit.body = JSON.stringify(body);
+  }
+  if (onData) {
+    fetchSseStreamInit.onData = (data): void => {
+      onData(JSON.parse(data) as T);
+    };
+  }
+  await fetchSseStream(req, fetchSseStreamInit);
 }
