@@ -1,7 +1,7 @@
 {
   "name": "fetch-sse-stream",
   "version": "0.0.1",
-  "description": "",
+  "description": "A library for Server-Sent Events, like fetch.",
   "license": "MIT",
   "author": "ofk <ofkjpn+npm@gmail.com> (https://github.com/ofk/)",
   "repository": {
