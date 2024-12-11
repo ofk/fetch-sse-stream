@@ -34,7 +34,7 @@
   "types": "dist/index.d.ts",
   "dependencies": {
     "es6-error": "^4.1.1",
-    "eventsource-parser": "^2.0.1"
+    "eventsource-parser": "^3.0.0"
   },
   "devDependencies": {
     "@ofk/eslint-config-recommend": "^6.6.2",
