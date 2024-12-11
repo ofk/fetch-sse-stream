@@ -1,12 +1,12 @@
 /* eslint-disable no-await-in-loop */
-import type { ParsedEvent } from 'eventsource-parser';
+import type { EventSourceMessage } from 'eventsource-parser/stream';
 
 import { EventSourceParserStream } from 'eventsource-parser/stream';
 
 export async function* getSseStreamChunks(
   stream: ReadableStream<Uint8Array> | null,
   { signal }: Pick<RequestInit, 'signal'> = {},
-): AsyncGenerator<ParsedEvent, void> {
+): AsyncGenerator<EventSourceMessage, void> {
   if (stream) {
     if (stream.locked) {
       throw new Error('Sorry! The stream is locked right now. Please try again.');
