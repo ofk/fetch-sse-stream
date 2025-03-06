@@ -46,4 +46,11 @@ describe('fetchSseStream', () => {
     ).rejects.toThrow('This operation was aborted');
     expect(result).toEqual(['foo']);
   });
+
+  test('invalid', async () => {
+    nock('https://example.com').get('/').reply(204);
+    await expect(fetchSseStream('https://example.com/')).rejects.toThrow(
+      'The stream must be a ReadableStream.',
+    );
+  });
 });
