@@ -16,7 +16,7 @@ describe('fetchSafe', () => {
   });
 
   test('aborted', async () => {
-    nock('https://example.com').get('/').delayBody(10000).reply(200, 'OK');
+    nock('https://example.com').get('/').delay(10000).reply(200, 'OK');
     const abortController = new AbortController();
     setTimeout(() => {
       abortController.abort();

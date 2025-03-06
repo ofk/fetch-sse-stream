@@ -2,10 +2,10 @@ import { fetchSseStream } from './fetchSseStream';
 
 type FetchSseStreamInit = NonNullable<Parameters<typeof fetchSseStream>[1]>;
 
-type FetchSseJsonStreamInit<T> = {
+type FetchSseJsonStreamInit<T> = Omit<FetchSseStreamInit, 'body' | 'onData'> & {
   body?: boolean | number | object | string | null;
   onData?: (data: T) => void;
-} & Omit<FetchSseStreamInit, 'body' | 'onData'>;
+};
 
 export async function fetchSseJsonStream<T = unknown>(
   input: Parameters<typeof fetchSseStream>[0],

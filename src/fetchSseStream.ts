@@ -3,7 +3,7 @@ import { getSseStreamChunks } from './getSseStreamChunks';
 
 export async function fetchSseStream(
   input: Parameters<typeof fetchSafe>[0],
-  { onData, ...init }: { onData?: (data: string) => void } & Parameters<typeof fetchSafe>[1] = {},
+  { onData, ...init }: Parameters<typeof fetchSafe>[1] & { onData?: (data: string) => void } = {},
 ): Promise<void> {
   const req = new Request(input, init);
   if (!req.headers.has('Accept')) {
