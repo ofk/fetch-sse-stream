@@ -4,10 +4,10 @@ import type { EventSourceMessage } from 'eventsource-parser/stream';
 import { EventSourceParserStream } from 'eventsource-parser/stream';
 
 export async function* getSseStreamChunks(
-  stream: ReadableStream<Uint8Array> | null,
+  stream: unknown,
   { signal }: Pick<RequestInit, 'signal'> = {},
 ): AsyncGenerator<EventSourceMessage, void> {
-  if (stream) {
+  if (stream instanceof ReadableStream) {
     if (stream.locked) {
       throw new Error('Sorry! The stream is locked right now. Please try again.');
     }
