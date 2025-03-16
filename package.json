@@ -9,15 +9,23 @@
     "url": "git+https://github.com/ofk/fetch-sse-stream.git"
   },
   "type": "module",
-  "main": "dist/fetch-sse-stream.cjs",
-  "module": "dist/fetch-sse-stream.module.js",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "scripts": {
-    "prebuild": "rimraf dist",
-    "build": "microbundle --tsconfig tsconfig.build.json",
+    "build": "tsup",
     "lint": "run-s -c lint:*",
     "lint:eslint": "eslint .",
     "lint:package-json": "prettier-package-json -l",
@@ -31,7 +39,6 @@
     "prepublishOnly": "npm run build",
     "test": "vitest run"
   },
-  "types": "dist/index.d.ts",
   "dependencies": {
     "es6-error": "^4.1.1",
     "eventsource-parser": "^3.0.0"
@@ -63,6 +70,5 @@
       "eslint --fix"
     ]
   },
-  "packageManager": "npm@10.8.0+sha512.c21f77b91733829ec70e73cc88b5dc0a4bf685a81d252d3327d293ff7d5dd05a173f4dbeaa037600ec29696f397f14569229e5dab10b7cfc3e0a30575b8f3f8d",
-  "source": "src/index.ts"
+  "packageManager": "npm@10.8.0+sha512.c21f77b91733829ec70e73cc88b5dc0a4bf685a81d252d3327d293ff7d5dd05a173f4dbeaa037600ec29696f397f14569229e5dab10b7cfc3e0a30575b8f3f8d"
 }
