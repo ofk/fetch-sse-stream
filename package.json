@@ -47,6 +47,7 @@
     "prettier": "^3.5.3",
     "prettier-package-json": "^2.8.0",
     "rimraf": "^6.0.1",
+    "tsup": "^8.4.0",
     "typescript": "^5.8.2",
     "vitest": "^3.0.8"
   },
