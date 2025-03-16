@@ -1,5 +1,6 @@
 import nock from 'nock';
 import { Readable } from 'node:stream';
+import { describe, expect, it } from 'vitest';
 
 import { fetchSafe, getSseStreamChunks } from '../src';
 
@@ -13,7 +14,7 @@ function createMockStream(): Readable {
 }
 
 describe('getSseStreamChunks', () => {
-  test('succeed', async () => {
+  it('succeed', async () => {
     nock('https://example.com').get('/').reply(200, createMockStream);
     const resp = await fetchSafe('https://example.com/');
     const result: string[] = [];
@@ -21,12 +22,14 @@ describe('getSseStreamChunks', () => {
     for await (const value of getSseStreamChunks(resp.body)) {
       result.push(value.data);
     }
-    expect(result).toEqual(['foo', 'bar', 'baz']);
+
+    expect(result).toStrictEqual(['foo', 'bar', 'baz']);
   });
 
-  test('locked', async () => {
+  it('locked', async () => {
     nock('https://example.com').get('/').reply(200, createMockStream);
     const resp = await fetchSafe('https://example.com/');
+
     await expect(getSseStreamChunks(resp.body).next()).resolves.toBeTruthy();
     await expect(getSseStreamChunks(resp.body).next()).rejects.toThrow('The stream is locked');
   });

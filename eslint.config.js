@@ -7,6 +7,7 @@ export default config({
       files: ['tests/**'],
       rules: {
         'import/no-nodejs-modules': 'off',
+        'vitest/prefer-expect-assertions': 'off',
       },
     },
   ],

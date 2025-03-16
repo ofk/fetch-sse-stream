@@ -1,5 +1,6 @@
 import nock from 'nock';
 import { Readable } from 'node:stream';
+import { describe, expect, it } from 'vitest';
 
 import { fetchSseStream } from '../src';
 
@@ -13,9 +14,10 @@ function createMockStream(): Readable {
 }
 
 describe('fetchSseStream', () => {
-  test('succeed', async () => {
+  it('succeed', async () => {
     nock('https://example.com').get('/').reply(200, createMockStream);
     const result: string[] = [];
+
     await expect(
       fetchSseStream('https://example.com/', {
         onData(data) {
@@ -23,18 +25,20 @@ describe('fetchSseStream', () => {
         },
       }),
     ).resolves.toBeUndefined();
-    expect(result).toEqual(['foo', 'bar', 'baz']);
+    expect(result).toStrictEqual(['foo', 'bar', 'baz']);
   });
 
-  test('for coverage', async () => {
+  it('for coverage', async () => {
     nock('https://example.com').get('/').reply(200, createMockStream);
+
     await expect(fetchSseStream('https://example.com/')).resolves.toBeUndefined();
   });
 
-  test('aborted', async () => {
+  it('aborted', async () => {
     nock('https://example.com').get('/').reply(200, createMockStream);
     const abortController = new AbortController();
     const result: string[] = [];
+
     await expect(
       fetchSseStream('https://example.com/', {
         onData(data) {
@@ -44,11 +48,12 @@ describe('fetchSseStream', () => {
         signal: abortController.signal,
       }),
     ).rejects.toThrow('This operation was aborted');
-    expect(result).toEqual(['foo']);
+    expect(result).toStrictEqual(['foo']);
   });
 
-  test('invalid', async () => {
+  it('invalid', async () => {
     nock('https://example.com').get('/').reply(204);
+
     await expect(fetchSseStream('https://example.com/')).rejects.toThrow(
       'The stream must be a ReadableStream.',
     );

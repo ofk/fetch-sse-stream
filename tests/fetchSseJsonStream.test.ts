@@ -1,5 +1,6 @@
 import nock from 'nock';
 import { Readable } from 'node:stream';
+import { describe, expect, it } from 'vitest';
 
 import { fetchSseJsonStream } from '../src';
 
@@ -13,9 +14,10 @@ function createMockStream(): Readable {
 }
 
 describe('fetchSseJsonStream', () => {
-  test('succeed', async () => {
+  it('succeed', async () => {
     nock('https://example.com').get('/').reply(200, createMockStream);
     const result: string[] = [];
+
     await expect(
       fetchSseJsonStream<{ k: string }>('https://example.com/', {
         onData(data) {
@@ -23,11 +25,12 @@ describe('fetchSseJsonStream', () => {
         },
       }),
     ).resolves.toBeUndefined();
-    expect(result).toEqual(['foo', 'bar', 'baz']);
+    expect(result).toStrictEqual(['foo', 'bar', 'baz']);
   });
 
-  test('for coverage', async () => {
+  it('for coverage', async () => {
     nock('https://example.com').post('/').reply(200, createMockStream);
+
     await expect(
       fetchSseJsonStream('https://example.com/', { body: {}, method: 'POST' }),
     ).resolves.toBeUndefined();
