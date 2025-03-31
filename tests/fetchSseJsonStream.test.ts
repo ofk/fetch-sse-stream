@@ -39,6 +39,29 @@ describe('fetchSseJsonStream', () => {
     expect(result).toStrictEqual(['foo', 'bar', 'baz']);
   });
 
+  it('succeeds to send the form data', async () => {
+    nock('https://example.com')
+      .post('/form_data')
+      .reply(200, (_uri: string, body: string) =>
+        createMockStream(Number(/form-data; name="count"\r\n\r\n(\d+)/.exec(body)?.[1] ?? '0')),
+      );
+
+    const result: string[] = [];
+    const body = new FormData();
+    body.append('count', '3');
+
+    await expect(
+      fetchSseJsonStream<{ k: string }>('https://example.com/form_data', {
+        body,
+        method: 'POST',
+        onData(data) {
+          result.push(data.k);
+        },
+      }),
+    ).resolves.toBeUndefined();
+    expect(result).toStrictEqual(['foo', 'bar', 'baz']);
+  });
+
   it('is for coverage', async () => {
     nock('https://example.com')
       .get('/')

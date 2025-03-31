@@ -3,7 +3,7 @@ import { fetchSseStream } from './fetchSseStream';
 type FetchSseStreamInit = NonNullable<Parameters<typeof fetchSseStream>[1]>;
 
 type FetchSseJsonStreamInit<T> = Omit<FetchSseStreamInit, 'body' | 'onData'> & {
-  body?: boolean | number | object | string | null;
+  body?: unknown;
   onData?: (data: T) => void;
 };
 
@@ -12,12 +12,18 @@ export async function fetchSseJsonStream<T = unknown>(
   { body, onData, ...init }: FetchSseJsonStreamInit<T> = {},
 ): Promise<void> {
   const req = new Request(input, init);
-  if (!req.headers.has('Content-Type')) {
-    req.headers.set('Content-Type', 'application/json');
-  }
   const fetchSseStreamInit: FetchSseStreamInit = {};
-  if (body !== undefined) {
-    fetchSseStreamInit.body = JSON.stringify(body);
+
+  if (
+    ![ReadableStream, Blob, ArrayBuffer, FormData].some((type) => body instanceof type) &&
+    !req.headers.has('Content-Type')
+  ) {
+    req.headers.set('Content-Type', 'application/json');
+    if (body !== undefined) {
+      fetchSseStreamInit.body = JSON.stringify(body);
+    }
+  } else {
+    fetchSseStreamInit.body = body as FetchSseStreamInit['body'];
   }
   if (onData) {
     fetchSseStreamInit.onData = (data): void => {
