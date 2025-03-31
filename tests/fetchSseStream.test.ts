@@ -6,16 +6,17 @@ import { fetchSseStream } from '../src';
 
 function createMockStream(): Readable {
   const stream = new Readable();
-  stream.push('data: foo\n\n');
-  stream.push('data: bar\n\n');
-  stream.push('data: baz\n\n');
+  ['foo', 'bar', 'baz'].forEach((k) => {
+    stream.push(`data: ${k}\n\n`);
+  });
   stream.push(null);
   return stream;
 }
 
 describe('fetchSseStream', () => {
-  it('succeed', async () => {
+  it('succeeds', async () => {
     nock('https://example.com').get('/').reply(200, createMockStream);
+
     const result: string[] = [];
 
     await expect(
@@ -28,14 +29,15 @@ describe('fetchSseStream', () => {
     expect(result).toStrictEqual(['foo', 'bar', 'baz']);
   });
 
-  it('for coverage', async () => {
+  it('is for coverage', async () => {
     nock('https://example.com').get('/').reply(200, createMockStream);
 
     await expect(fetchSseStream('https://example.com/')).resolves.toBeUndefined();
   });
 
-  it('aborted', async () => {
+  it('aborts', async () => {
     nock('https://example.com').get('/').reply(200, createMockStream);
+
     const abortController = new AbortController();
     const result: string[] = [];
 
@@ -51,7 +53,7 @@ describe('fetchSseStream', () => {
     expect(result).toStrictEqual(['foo']);
   });
 
-  it('invalid', async () => {
+  it('is invalid', async () => {
     nock('https://example.com').get('/').reply(204);
 
     await expect(fetchSseStream('https://example.com/')).rejects.toThrow(
