@@ -43,21 +43,21 @@
   "sideEffects": false,
   "dependencies": {
     "es6-error": "^4.1.1",
-    "eventsource-parser": "^3.0.0"
+    "eventsource-parser": "^3.0.1"
   },
   "devDependencies": {
-    "@ofk/eslint-config-recommend": "^7.1.2",
-    "@types/node": "^22.13.10",
-    "eslint": "^9.22.0",
+    "@ofk/eslint-config-recommend": "^7.2.2",
+    "@types/node": "^22.13.14",
+    "eslint": "^9.23.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.0",
-    "nock": "^14.0.1",
+    "nock": "^14.0.2",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.5.3",
     "prettier-package-json": "^2.8.0",
     "tsup": "^8.4.0",
     "typescript": "^5.8.2",
-    "vitest": "^3.0.8"
+    "vitest": "^3.1.1"
   },
   "keywords": [],
   "lint-staged": {
