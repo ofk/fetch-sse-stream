@@ -29,10 +29,44 @@ describe('fetchSseStream', () => {
     expect(result).toStrictEqual(['foo', 'bar', 'baz']);
   });
 
+  it('withdraws', async () => {
+    nock('https://example.com').get('/').reply(200, createMockStream);
+
+    const result: string[] = [];
+
+    await expect(
+      fetchSseStream('https://example.com/', {
+        isDone: (data) => data === 'bar',
+        onData(data) {
+          result.push(data);
+        },
+      }),
+    ).resolves.toBeUndefined();
+    expect(result).toStrictEqual(['foo']);
+  });
+
   it('is for coverage', async () => {
     nock('https://example.com').get('/').reply(200, createMockStream);
 
     await expect(fetchSseStream('https://example.com/')).resolves.toBeUndefined();
+  });
+
+  it('throws', async () => {
+    nock('https://example.com').get('/').reply(200, createMockStream);
+
+    const result: string[] = [];
+
+    await expect(
+      fetchSseStream('https://example.com/', {
+        onData(data) {
+          if (data === 'bar') {
+            throw new Error('stop');
+          }
+          result.push(data);
+        },
+      }),
+    ).rejects.toThrow('stop');
+    expect(result).toStrictEqual(['foo']);
   });
 
   it('aborts', async () => {

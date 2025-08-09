@@ -20,20 +20,21 @@ export async function* getSseStreamChunks(
     .pipeThrough(new EventSourceParserStream())
     .getReader();
 
-  while (true) {
-    const { done, value } = await reader.read();
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
 
-    if (done) {
-      reader.releaseLock();
-      await stream.cancel();
-      break;
+      if (done) {
+        break;
+      }
+
+      if (signal?.aborted) {
+        throw new DOMException('This operation was aborted', 'AbortError');
+      }
+
+      yield value;
     }
-
-    if (signal?.aborted) {
-      await reader.cancel('aborted');
-      throw new DOMException('This operation was aborted', 'AbortError');
-    }
-
-    yield value;
+  } finally {
+    await reader.cancel();
   }
 }
